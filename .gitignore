@@ -41,6 +41,7 @@ package-lock.json
 
 # Windows shortcuts
 *.lnk
+config.js
 
 .vscode/
 backup/

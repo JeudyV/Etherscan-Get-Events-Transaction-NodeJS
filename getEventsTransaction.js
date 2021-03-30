@@ -1,6 +1,7 @@
 const WebSocket = require('ws')
+const config = require('./config.js');
 
-const socket = new WebSocket(`wss://kovan.infura.io/ws/v3/INFURA_KEY`)
+const socket = new WebSocket(`wss://kovan.infura.io/ws/v3/${config.INFURA_KEY}`)
 
 socket.addEventListener('open', event => {
     console.log('Connection opened - ', event)
@@ -15,7 +16,7 @@ socket.addEventListener('close', event => {
 socket.addEventListener('open', event => {
 
     // Subscribe to a single transaction
-    socket.send('{ "id": 1, "method": "eth_subscribe", "params": ["logs", { "address": "contract-address" }] }')
+    socket.send(`{ "id": 1, "method": "eth_subscribe", "params": ["logs", { "address":"${config.CONTRACT_ADDRESS}" }] }`)
 })
 
 // Response Handler
