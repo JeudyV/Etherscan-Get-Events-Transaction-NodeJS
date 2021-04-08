@@ -87,7 +87,22 @@ function insertEventInDB() {
         })
         .on('error', console.error);
 }
-// insertEventInDB()
+
+const tablePools = async(ppid, plastPoolValue, ptoken, pstatus, pvusdDebt, pvusdCredit, ptokenBalance, pprice) => {
+        const { data, error } = await supabase
+            .from('pools')
+            .insert([{
+                pid: ppid,
+                lastPoolValue: plastPoolValue,
+                token: ptoken,
+                status: pstatus,
+                vusdDebt: pvusdDebt,
+                vusdCredit: pvusdCredit,
+                tokenBalance: ptokenBalance,
+                price: pprice,
+            }, ])
+    }
+    // insertEventInDB()
 
 async function listenToEvent() {
     var i = 0
@@ -127,6 +142,18 @@ async function listenToEvent() {
             var ptokenAmount = event["returnValues"]["tokenAmount"]
             if (event["event"] == "AddLiquidity") {
                 tableAddLiquidity(pblocknumber, pprovider, ppid, ptoken, pliquidityAmount, pvusdAmout, ptokenAmount)
+                var request = require('request');
+                var options = {
+                    'method': 'GET',
+                    'url': 'https://api.monox.finance/kovan/set/pools/' + ptoken,
+                    'headers': {
+                        'Cookie': '__cfduid=ddb6915c799fabe9287932dff2c0158f91617208298'
+                    }
+                };
+                request(options, function(error, response) {
+                    if (error) throw new Error(error);
+                    console.log(response.body);
+                });
             } else if (event["event"] == "RemoveLiquidity") {
                 tableRemoveLiquidity(pblocknumber, pprovider, ppid, ptoken, pliquidityAmount, pvusdAmout, ptokenAmount)
             } else if (event["event"] == "Swap ") {
